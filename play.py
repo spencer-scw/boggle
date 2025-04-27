@@ -37,37 +37,43 @@ def solve(board, dict, position = None, word_so_far = ''):
         return solutions
 
 def new_game(lang='english', time_sec=150):
-    game_board = Board(lang)
-    game_board.shake()
-    for line in game_board.pretty():
-        print(line)
+    with term.fullscreen(), term.cbreak():
+        game_board = Board(lang)
+        game_board.shake()
+        for line in game_board.pretty():
+            print(line)
 
-    user_solutions = set()
-    start = time.time()
+        user_solutions = set()
+        start = time.time()
 
-    while time.time() - start < time_sec:
-        solution = input('=> ')
-        user_solutions.add(solution)
+        key = ''
+        print('=> ', end = '')
+        while time.time() - start < time_sec and key.name != "KEY_ESCAPE":
+            val = term.inkey()
+            if val.name:
+                ...
+            solution = input('=> ')
+            user_solutions.add(solution)
 
-    all_solutions = solve(game_board, boggle_dicts[lang])
+        all_solutions = solve(game_board, boggle_dicts[lang])
 
-    score = 0
-    for solution in user_solutions:
-        if solution in all_solutions:
-            score += len(solution) - 2
-        else:
-            print(f"{solution} is not in my dictionary.")
+        score = 0
+        for solution in user_solutions:
+            if solution in all_solutions:
+                score += len(solution) - 2
+            else:
+                print(f"{solution} is not in my dictionary.")
 
-    print(f"Final score: {score}")
+        print(f"Final score: {score}")
 
-    print("Other solutions:")
-    outstr = ''
-    for i, solution in enumerate(sorted(all_solutions - user_solutions)):
-        outstr = ''.join([outstr, solution, '\t'])
-        if (i + 1) % 5 == 0:
-            print(outstr)
-            outstr = ''
-    print(outstr)
+        print("Other solutions:")
+        outstr = ''
+        for i, solution in enumerate(sorted(all_solutions - user_solutions)):
+            outstr = ''.join([outstr, solution, '\t'])
+            if (i + 1) % 5 == 0:
+                print(outstr)
+                outstr = ''
+        print(outstr)
 
 
 
@@ -77,21 +83,3 @@ def help():
     print("The computer will also show you all of the possible words that you missed.")
 
 
-while True:
-    print()
-    print("(n)ew game, (h)elp, (q)uit")
-    print("for new games, you can specify the language and time limit in that order.")
-    command, *args = input('-> ').split()
-    if command in ['n', 'new', 'new game']:
-        language = 'english'
-        time_sec = 150
-        if len(args) > 0:
-            if args[0] in ['spanish']:
-                language = args[0]
-        if len(args) > 1:
-            time_sec = int(args[1])
-        new_game(language, time_sec)
-    elif command in ['q', 'quit', 'exit']:
-        break
-    else:
-        help()
