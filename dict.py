@@ -13,6 +13,8 @@ class TreeNode:
 
 class BoggleDictionary:
     def __init__(self, language = 'words'):
+        if language == 'english':
+            language = 'words'
         f = ''.join(['/usr/share/dict/', language])
         words = open(f, 'r')
         self.word_tree = TreeNode('')
